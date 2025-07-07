@@ -3,14 +3,14 @@
 ## Requirements
 
 - Node.js 18+
-- pnpm (recommended) or npm/yarn
+- npm (project is configured for npm)
 - PostgreSQL (or your configured Prisma database)
 
 ## Setup
 
 1. **Install dependencies:**
    ```sh
-   pnpm install
+   npm install
    ```
 
 2. **Configure environment:**
@@ -19,17 +19,17 @@
 3. **Prepare the database:**
    - Run Prisma migrations:
      ```sh
-     pnpm prisma migrate dev
+     npx prisma migrate dev
      ```
    - Seed the database with quiz questions:
      ```sh
-     cd singlish-tea/prisma/seed
+     cd prisma/seed
      npx ts-node seed-questions.ts
      ```
 
 4. **Start the development server:**
    ```sh
-   pnpm dev
+   npm run dev
    ```
    The app will be available at http://localhost:3000
 
@@ -47,13 +47,13 @@
 
 - Run all tests:
   ```sh
-  pnpm test
+  npm test
   ```
 
 ## Notes
 
 - Make sure your database is running before starting the app.
-- For production, set up environment variables and run `pnpm build` then `pnpm start`.
+- For production, set up environment variables and run `npm run build` then `npm start`.
 # Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
