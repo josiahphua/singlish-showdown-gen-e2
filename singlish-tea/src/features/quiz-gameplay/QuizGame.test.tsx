@@ -1,0 +1,26 @@
+import { render, screen, fireEvent } from '@testing-library/react';
+import { QuizGame } from './QuizGame';
+
+jest.mock('./useQuizGame', () => ({
+  useQuizGame: () => ({
+    currentQuestion: { id: '1', text: 'What is Singlish?', answer: 'A' },
+    answer: '',
+    setAnswer: jest.fn(),
+    submitAnswer: jest.fn(),
+    isCorrect: null,
+    isLoading: false,
+    nextQuestion: jest.fn(),
+    questionNumber: 1,
+    totalQuestions: 1,
+    finished: false,
+    resetQuiz: jest.fn(),
+  }),
+}));
+
+describe('QuizGame', () => {
+  it('renders question and input', () => {
+    render(<QuizGame />);
+    expect(screen.getByText('What is Singlish?')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Type your answer...')).toBeInTheDocument();
+  });
+});

@@ -1,0 +1,50 @@
+import { renderHook, act } from '@testing-library/react';
+import { useQuizGame } from './useQuizGame';
+
+// Mock trpc
+jest.mock('@/src/trpc/react', () => ({
+  trpc: {
+    quizGame: {
+      getQuestions: {
+        useQuery: () => ({
+          data: [
+            { id: '1', text: 'Q1', answer: 'A1' },
+            { id: '2', text: 'Q2', answer: 'A2' },
+          ],
+          isLoading: false,
+          refetch: jest.fn(),
+        }),
+      },
+    },
+  },
+}));
+
+describe('useQuizGame', () => {
+  it('should initialize with first question', () => {
+    const { result } = renderHook(() => useQuizGame());
+    expect(result.current.currentQuestion.text).toBe('Q1');
+    expect(result.current.totalQuestions).toBe(2);
+  });
+
+  it('should submit correct answer', () => {
+    const { result } = renderHook(() => useQuizGame());
+    act(() => {
+      result.current.setAnswer('A1');
+      result.current.submitAnswer();
+    });
+    expect(result.current.isCorrect).toBe(true);
+  });
+
+  it('should go to next question and finish', () => {
+    const { result } = renderHook(() => useQuizGame());
+    act(() => {
+      result.current.setAnswer('A1');
+      result.current.submitAnswer();
+      result.current.nextQuestion();
+      result.current.setAnswer('A2');
+      result.current.submitAnswer();
+      result.current.nextQuestion();
+    });
+    expect(result.current.finished).toBe(true);
+  });
+});
