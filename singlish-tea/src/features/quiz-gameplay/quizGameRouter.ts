@@ -1,32 +1,17 @@
 import { publicProcedure, createTRPCRouter } from '~/server/api/trpc';
-
-
-const questions = [
-  {
-    id: '1',
-    text: 'What does "lah" mean in Singlish?',
-    choices: ['emphasis', 'question'],
-    answer: 'emphasis',
-    difficulty: 'easy' as const,
-  },
-  {
-    id: '2',
-    text: 'Translate "shiok" to English.',
-    choices: ['delicious', 'boring'],
-    answer: 'delicious',
-    difficulty: 'medium' as const,
-  },
-  {
-    id: '3',
-    text: 'What is "kiasu"?',
-    choices: ['afraid to lose', 'very happy'],
-    answer: 'afraid to lose',
-    difficulty: 'hard' as const,
-  },
-];
+import { db } from '~/server/db';
 
 export const quizGameRouter = createTRPCRouter({
-  getQuestions: publicProcedure.query(() => questions),
+  getQuestions: publicProcedure.query(async () => {
+    const questions = await db.question.findMany();
+    return questions.map(q => ({
+      id: q.id,
+      text: q.text,
+      choices: q.choices,
+      answer: q.answer,
+      difficulty: q.difficulty,
+    }));
+  }),
   // Add more procedures as needed
 });
 
