@@ -16,12 +16,21 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
+import Link from "next/link";
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${geist.variable}`}>
       <body>
+        <nav className="w-full bg-white/20 backdrop-blur sticky top-0 z-50 shadow-sm">
+          <div className="container mx-auto flex items-center gap-6 py-3 px-4">
+            <Link href="/" className="font-bold text-lg hover:underline">Home</Link>
+            <Link href="/leaderboard" className="hover:underline">Leaderboard</Link>
+            <Link href="/content-management" className="hover:underline">Content Management</Link>
+          </div>
+        </nav>
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
     </html>

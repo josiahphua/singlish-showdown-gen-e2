@@ -1,4 +1,4 @@
-import { trpc } from '@/src/trpc/react';
+import { api } from '~/trpc/react';
 
 export type LeaderboardEntry = {
   id: string;
@@ -7,6 +7,6 @@ export type LeaderboardEntry = {
 };
 
 export const useLeaderboard = () => {
-  const { data = [], isLoading } = trpc.leaderboard.getTop.useQuery();
+  const { data = [], isLoading } = api.leaderboard.getTop.useQuery();
   return { leaderboard: data as LeaderboardEntry[], isLoading };
 };

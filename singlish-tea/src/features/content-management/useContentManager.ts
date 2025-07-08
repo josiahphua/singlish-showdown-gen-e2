@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { trpc } from '@/src/trpc/react';
+import { api } from '~/trpc/react';
 
 export type ContentQuestion = {
   id: string;
@@ -8,18 +7,18 @@ export type ContentQuestion = {
 };
 
 export const useContentManager = () => {
-  const { data = [], isLoading, refetch } = trpc.contentManagement.getAll.useQuery();
-  const createMutation = trpc.contentManagement.create.useMutation();
-  const deleteMutation = trpc.contentManagement.delete.useMutation();
+  const { data = [], isLoading, refetch } = api.contentManagement.getAll.useQuery();
+  const createMutation = api.contentManagement.create.useMutation();
+  const deleteMutation = api.contentManagement.delete.useMutation();
   // Update mutation can be added
 
   const create = async (q: Omit<ContentQuestion, 'id'>) => {
     await createMutation.mutateAsync(q);
-    refetch();
+    void refetch();
   };
   const remove = async (id: string) => {
     await deleteMutation.mutateAsync({ id });
-    refetch();
+    void refetch();
   };
   // Update function can be added
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { publicProcedure, router } from '@/src/server/trpc';
+import { publicProcedure, createTRPCRouter } from '~/server/api/trpc';
 
 const mockLeaderboard = [
   { id: '1', name: 'Alice', score: 10 },
@@ -7,7 +7,7 @@ const mockLeaderboard = [
   { id: '3', name: 'Charlie', score: 7 },
 ];
 
-export const leaderboardRouter = router({
+export const leaderboardRouter = createTRPCRouter({
   getTop: publicProcedure.query(() => mockLeaderboard),
   submitScore: publicProcedure
     .input(z.object({ name: z.string(), score: z.number().int().min(0) }))

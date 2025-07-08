@@ -14,7 +14,7 @@ export const useAudioPronunciation = (audioUrl: string) => {
       audioRef.current.addEventListener('ended', () => setIsPlaying(false));
     }
     audioRef.current.currentTime = 0;
-    audioRef.current.play();
+    void audioRef.current.play();
     setIsPlaying(true);
   }, [audioUrl]);
 

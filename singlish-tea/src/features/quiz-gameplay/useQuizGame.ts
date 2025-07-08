@@ -1,33 +1,57 @@
 
-import { useState, useCallback } from 'react';
-import { trpc } from '@/src/trpc/react';
-import type { Difficulty } from '../difficulty-levels/DifficultySelector';
+
+import { useState, useCallback, useEffect } from 'react';
+import { api } from '~/trpc/react';
 
 export type QuizQuestion = {
   id: string;
   text: string;
+  choices: string[];
   answer: string;
-  difficulty: Difficulty;
+  // difficulty: string; // No longer used
 };
 
+function shuffle<T>(array: T[]): T[] {
+  // Fisher-Yates shuffle
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
-export const useQuizGame = (difficulty: Difficulty) => {
+export const useQuizGame = () => {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState('');
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [finished, setFinished] = useState(false);
+  const [shuffledQuestions, setShuffledQuestions] = useState<QuizQuestion[]>([]);
+  const [score, setScore] = useState(0);
 
-  // Fetch questions from API
-  const { data: questions, isLoading, refetch } = trpc.quizGame.getQuestions.useQuery();
+  // Fetch all questions from API
+  const { data: questions, isLoading, refetch } = api.quizGame.getQuestions.useQuery();
 
-  // Filter questions by selected difficulty
-  const filteredQuestions = questions?.filter((q: QuizQuestion) => q.difficulty === difficulty) || [];
-  const currentQuestion = filteredQuestions[questionIndex];
-  const totalQuestions = filteredQuestions.length;
+  // Shuffle and set questions on first load or refetch, limit to 10
+  useEffect(() => {
+    if (questions && questions.length > 0) {
+      setShuffledQuestions(shuffle(questions).slice(0, 10));
+      setQuestionIndex(0);
+      setFinished(false);
+      setAnswer('');
+      setIsCorrect(null);
+      setScore(0);
+    }
+  }, [questions]);
+
+  const currentQuestion = shuffledQuestions[questionIndex];
+  const totalQuestions = shuffledQuestions.length;
 
   const submitAnswer = useCallback(() => {
     if (!currentQuestion) return;
-    setIsCorrect(answer.trim().toLowerCase() === currentQuestion.answer.trim().toLowerCase());
+    const correct = answer.trim().toLowerCase() === currentQuestion.answer.trim().toLowerCase();
+    setIsCorrect(correct);
+    if (correct) setScore(s => s + 1);
   }, [answer, currentQuestion]);
 
   const nextQuestion = useCallback(() => {
@@ -41,12 +65,17 @@ export const useQuizGame = (difficulty: Difficulty) => {
   }, [questionIndex, totalQuestions]);
 
   const resetQuiz = useCallback(() => {
-    setQuestionIndex(0);
-    setAnswer('');
-    setIsCorrect(null);
-    setFinished(false);
-    refetch();
-  }, [refetch]);
+    if (questions && questions.length > 0) {
+      setShuffledQuestions(shuffle(questions).slice(0, 10));
+      setQuestionIndex(0);
+      setFinished(false);
+      setAnswer('');
+      setIsCorrect(null);
+      setScore(0);
+    } else {
+      void refetch();
+    }
+  }, [questions, refetch]);
 
   return {
     currentQuestion,
@@ -60,6 +89,6 @@ export const useQuizGame = (difficulty: Difficulty) => {
     totalQuestions,
     finished,
     resetQuiz,
-    setDifficulty,
+    score,
   };
 };

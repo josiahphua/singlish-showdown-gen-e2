@@ -1,9 +1,9 @@
 import { postRouter } from "~/server/api/routers/post";
-import { quizGameRouter } from "@/src/features/quiz-gameplay/quizGameRouter";
-import { contentAuthenticityReviewRouter } from "@/src/features/content-authenticity-review/contentAuthenticityReviewRouter";
+import { quizGameRouter } from "~/features/quiz-gameplay/quizGameRouter";
+import { contentAuthenticityReviewRouter } from "~/features/content-authenticity-review/contentAuthenticityReviewRouter";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
-import { leaderboardRouter } from "@/src/features/leaderboard-competition/leaderboardRouter";
-import { contentManagementRouter } from "@/src/features/content-management/contentManagementRouter";
+import { leaderboardRouter } from "~/features/leaderboard-competition/leaderboardRouter";
+import { contentManagementRouter } from "~/features/content-management/contentManagementRouter";
 
 /**
  * This is the primary router for your server.

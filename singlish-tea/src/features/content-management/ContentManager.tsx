@@ -5,7 +5,7 @@ import { useContentManager } from './useContentManager';
  * ContentManager - UI for managing quiz content (CRUD).
  */
 export const ContentManager: React.FC = () => {
-  const { questions, isLoading, create, update, remove } = useContentManager();
+  const { questions, isLoading, create, remove } = useContentManager();
   const [newQuestion, setNewQuestion] = useState({ text: '', answer: '' });
 
   if (isLoading) return <div className="p-4">Loading content...</div>;
@@ -17,7 +17,7 @@ export const ContentManager: React.FC = () => {
         className="mb-6 flex gap-2"
         onSubmit={e => {
           e.preventDefault();
-          create(newQuestion);
+          void create(newQuestion);
           setNewQuestion({ text: '', answer: '' });
         }}
       >
@@ -43,7 +43,7 @@ export const ContentManager: React.FC = () => {
         {questions.map(q => (
           <li key={q.id} className="mb-2 flex gap-2 items-center">
             <span className="flex-1">{q.text} <span className="text-gray-400">({q.answer})</span></span>
-            <button className="btn btn-xs btn-error" onClick={() => remove(q.id)}>Delete</button>
+            <button className="btn btn-xs btn-error" onClick={() => void remove(q.id)}>Delete</button>
             {/* Edit functionality can be added here */}
           </li>
         ))}

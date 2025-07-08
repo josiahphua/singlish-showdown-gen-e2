@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { trpc } from '@/src/trpc/react';
+import { api } from '~/trpc/react';
 
 export type ContentAuthenticityReviewInput = {
   questionId: string;
@@ -9,7 +9,7 @@ export type ContentAuthenticityReviewInput = {
 export const useContentAuthenticityReview = () => {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const mutation = trpc.contentAuthenticityReview.submitReview.useMutation();
+  const mutation = api.contentAuthenticityReview.submitReview.useMutation();
 
   const submitReview = async (input: ContentAuthenticityReviewInput) => {
     setIsSubmitting(true);

@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { publicProcedure, router } from '@/src/server/trpc';
+import { publicProcedure, createTRPCRouter } from '~/server/api/trpc';
 
-export const contentAuthenticityReviewRouter = router({
+export const contentAuthenticityReviewRouter = createTRPCRouter({
   submitReview: publicProcedure
     .input(z.object({
       questionId: z.string(),

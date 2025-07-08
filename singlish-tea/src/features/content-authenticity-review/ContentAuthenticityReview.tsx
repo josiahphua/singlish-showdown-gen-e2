@@ -21,7 +21,7 @@ export const ContentAuthenticityReview: React.FC<ContentAuthenticityReviewProps>
       className="flex flex-col gap-2 mt-4"
       onSubmit={e => {
         e.preventDefault();
-        submitReview({ questionId, reason });
+        void submitReview({ questionId, reason });
       }}
     >
       <label htmlFor="authenticity-reason" className="text-sm">Flag this question as inauthentic/problematic:</label>

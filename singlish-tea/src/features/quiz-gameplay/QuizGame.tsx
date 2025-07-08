@@ -1,12 +1,13 @@
+
 import React from 'react';
 import { useQuizGame } from './useQuizGame';
 import { ScreenReaderOnly } from '../accessibility/ScreenReaderOnly';
-import type { Difficulty } from '../difficulty-levels/DifficultySelector';
 
 /**
- * QuizGame - Main gameplay UI for the quiz experience.
+ * QuizGame - Multiple choice UI for the quiz experience.
+ * Now: No difficulty selection, questions are randomized, each asked once per run.
  */
-export const QuizGame: React.FC<{ difficulty: Difficulty }> = ({ difficulty }) => {
+export const QuizGame: React.FC = () => {
   const {
     currentQuestion,
     answer,
@@ -19,13 +20,16 @@ export const QuizGame: React.FC<{ difficulty: Difficulty }> = ({ difficulty }) =
     totalQuestions,
     finished,
     resetQuiz,
-  } = useQuizGame(difficulty);
+    score,
+  } = useQuizGame();
+
 
   if (isLoading) return <div className="p-4" role="status" aria-live="polite">Loading...</div>;
   if (finished)
     return (
       <div className="p-4 text-center">
         <h2 className="text-xl font-bold mb-2" tabIndex={0}>Quiz Complete!</h2>
+        <div className="text-lg mb-4">Your score: {score} / 10</div>
         <button className="btn btn-primary" onClick={resetQuiz} autoFocus aria-label="Restart quiz">
           Restart
         </button>
@@ -41,22 +45,22 @@ export const QuizGame: React.FC<{ difficulty: Difficulty }> = ({ difficulty }) =
       <div className="mb-6 text-lg font-semibold" id="question-text" tabIndex={0} aria-live="polite">
         {currentQuestion?.text}
       </div>
-      <label htmlFor="quiz-answer" className="sr-only">Your answer</label>
-      <input
-        id="quiz-answer"
-        className="input input-bordered w-full mb-4"
-        type="text"
-        value={answer}
-        onChange={e => setAnswer(e.target.value)}
-        disabled={isCorrect !== null}
-        placeholder="Type your answer..."
-        aria-label="Type your answer"
-        aria-describedby="question-text question-progress"
-        autoFocus
-        onKeyDown={e => {
-          if (e.key === 'Enter' && !isCorrect && answer) submitAnswer();
-        }}
-      />
+      <div className="flex flex-col gap-3">
+        {currentQuestion?.choices?.map((choice: string, idx: number) => (
+          <button
+            key={idx}
+            className={`btn w-full ${answer === choice ? 'btn-primary' : 'btn-outline'} ${isCorrect !== null ? (choice === currentQuestion.answer ? 'border-green-500' : (answer === choice ? 'border-red-500' : '')) : ''}`}
+            onClick={() => {
+              if (isCorrect === null) setAnswer(choice);
+            }}
+            disabled={isCorrect !== null}
+            aria-pressed={answer === choice}
+            aria-label={choice}
+          >
+            {choice}
+          </button>
+        ))}
+      </div>
       {isCorrect !== null && (
         <div
           className={isCorrect ? 'text-green-600' : 'text-red-600'}
@@ -83,6 +87,6 @@ export const QuizGame: React.FC<{ difficulty: Difficulty }> = ({ difficulty }) =
       </div>
     </div>
   );
-}
+};
 
 export default QuizGame;

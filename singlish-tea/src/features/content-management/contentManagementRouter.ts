@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { publicProcedure, router } from '@/src/server/trpc';
+import { publicProcedure, createTRPCRouter } from '~/server/api/trpc';
 
 let questions = [
   { id: '1', text: 'What does "lah" mean in Singlish?', answer: 'emphasis' },
   { id: '2', text: 'Translate "shiok" to English.', answer: 'delicious' },
 ];
 
-export const contentManagementRouter = router({
+export const contentManagementRouter = createTRPCRouter({
   getAll: publicProcedure.query(() => questions),
   create: publicProcedure
     .input(z.object({ text: z.string().min(1), answer: z.string().min(1) }))

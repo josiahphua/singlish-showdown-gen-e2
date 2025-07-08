@@ -18,10 +18,10 @@ export const AudioPronunciation: React.FC<AudioPronunciationProps> = ({ audioUrl
       className="btn btn-secondary flex items-center gap-2"
       onClick={play}
       disabled={isPlaying}
-      aria-label={label || 'Play pronunciation'}
+      aria-label={label ?? 'Play pronunciation'}
     >
       <span role="img" aria-label="speaker">🔊</span>
-      {label || 'Play'}
+      {label ?? 'Play'}
     </button>
   );
 };

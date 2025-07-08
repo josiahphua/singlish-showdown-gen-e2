@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useQuizGame } from './useQuizGame';
 
 // Mock trpc
-jest.mock('@/src/trpc/react', () => ({
+jest.mock('~/trpc/react', () => ({
   trpc: {
     quizGame: {
       getQuestions: {
